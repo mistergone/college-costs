@@ -98,24 +98,25 @@ var getApiValues = {
     return nationalDataRequest;
   },
 
+  // createInitialObject: function( constants, expenses ) {
+  //   var obj = {
+  //     expenses: expenses,
+  //     constants: constants
+  //   };
+  //   return obj;
+  //   }
+  // },
 
   schoolData: function( iped, pid ) {
-    return $.when( this.fetchSchoolData( iped ), this.fetchProgramData( iped, pid ), this.fetchNationalData( iped, pid ) )
-      .done( function( schoolData, programData, nationalData ) {
-        return $.extend( schoolData[0], programData[0], nationalData[0] );
-      } );
+    return $.when(
+      this.fetchSchoolData( iped ),
+      this.fetchProgramData( iped, pid ),
+      this.fetchNationalData( iped, pid )
+    );
   },
 
   initialData: function() {
-    return $.when( this.constants(), this.expenses() )
-      .done( function( cons, exps ) {
-        var data = {
-          expenses: exps[0],
-          constants: cons[0]
-        };
-        console.log( data );
-        return data;
-    } );
+    return $.when( this.constants(), this.expenses() );
   }
 
 };

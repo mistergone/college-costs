@@ -21,17 +21,20 @@ var app = {
   init: function() {
   // jquery promise to delay full model creation until ajax resolves
     $.when( fetch.initialData() )
-      .done( function( resp ) {
-        console.log( resp[0] );
-        financialModel.init( resp[0].constants );
+      .done( function( constants, expenses ) {
+        console.log( constants[0], expenses[0] );
+        financialModel.init( constants[0] );
         financialView.init();
-        expensesModel.init( resp[0].expenses );
+        expensesModel.init( expenses[0] );
         // Check for URL offer data
         if ( getUrlValues.urlOfferExists() ) {
           var urlValues = getUrlValues.urlValues();
           $.when( fetch.schoolData( urlValues.collegeID, urlValues.programID ) )
-            .done( function( data ) {
-              var schoolValues = schoolModel.init( data[0] );
+            .done( function( schoolData, programData, nationalData ) {
+              var data = {},
+                schoolValues;
+              $.extend( data, schoolData[0], programData[0], nationalData[0] );
+              schoolValues = schoolModel.init( data );
               financialModel.updateModelWithProgram( schoolValues );
               financialView.updateViewWithProgram( schoolValues );
               publish.extendFinancialData( urlValues );
